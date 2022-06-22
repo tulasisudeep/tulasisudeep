@@ -1,0 +1,292 @@
+Stepper motor
+IN1 is connected to pin8
+IN2 is connected to pin9
+IN3 is connected to pin10
+IN4 is connected to pin11
+
+#include<Stepper.h>
+const int StepsPerRevolutions=2048;
+Stepper myStepper=Stepper(StepsPerRevolutions,8,10,9,11);
+void setup(){
+myStepper.setSpeed(10);
+Serial.begin(9600);
+}
+void loop(){
+Serial.println("clockwise");
+myStepper.step(StepsPerRevolutions);
+delay(2000);
+Serial.println("counterclockwise");
+myStepper.step(-StepsPerRevolutions);
+delay(2000);
+}
+
+
+Servo motor
+brown wire of servo to gnd of aurdino
+red wire of servo to 5v of aurdino
+yellow wire of servo to pin8 of aurdino
+
+#include<Servo.h>
+Servo Servo;
+int angle=10;
+
+void setup(){
+Servo.attach(8);
+Servo.write(angle);
+}
+void loop()
+{
+for(angle=10;angle<180;angle++)
+    {
+        Servo.write(angle);
+        delay(15);
+        }
+
+ 
+    for(angle=180;angle>10;angle--)
+        {
+          Servo.write(angle);
+            delay(15);
+            }
+        }
+
+Blinking of LED
+
+void setup()
+{
+pinMode(12,OUTPUT);
+}
+void loop()
+{
+digitalWrite(12,HIGH);
+delay(2000);
+digitalWrite(12,LOW);
+delay(1000);
+}
+
+keypad 
+9,8,7,6pin of aurdino to row pinouts of keypad
+5,4,3,2pin of aurdino to coloumn pinouts of keypad
+
+#include<Keypad.h>
+const byte ROWS=4;
+const byte COLS=4;
+char keys[ROWS][COLS]={{'1','2','3','A'},{'4','5','6','B'},{'7','8','9','C'},{'*','0','#','D'}};
+byte rowpins[ROWS]={9,8,7,6};
+byte colpins[COLS]={5,4,3,2};
+Keypad customkeypad=Keypad(makeKeymap(keys),rowpins,colpins,ROWS,COLS);
+void setup()
+{
+  Serial.begin(9600);
+  
+}
+void loop()
+{
+  char customkey=customkeypad.getKey();
+
+ if(customkey)
+ {
+
+  Serial.println(customkey);
+ }
+}
+
+
+
+soil sensor
+ arduino          soil sensor
+  A0         -          A0
+  Vcc        -          Vcc
+  GND        -          GND
+  
+int sensor_input=A0;
+int output_value;
+void setup()
+{
+  Serial.begin(9600);
+  Serial.println("Reading from sensor");
+  delay(2000);
+  
+}
+void loop()
+{
+  output_value=analogRead(sensor_input);
+  output_value=map(output_value,1023,305,0,100);
+  Serial.print("moisture");
+  Serial.print(output_value);
+  Serial.println("%");
+  delay(4000);
+  
+}
+
+
+
+
+rtc 
+  arduino          RTC
+   gnd        -     gnd
+   +5v        -     Vcc
+   A4         -     SDA
+   A5         -     SCL
+   
+#include<Adafruit_I2CDevice.h>
+#include<RTCDS1307.h>
+#include <RTClib.h> 
+#include <Wire.h>
+RTC_DS1307 rtc; 
+char buf1[120];
+
+void setup()
+{
+Serial.begin(9600);
+Wire.begin(); 
+rtc.begin();
+rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+
+}
+
+void loop()
+{
+DateTime now = rtc.now();
+sprintf(buf1, "%02d:%02d:%02d %02d/%02d/%02d", now.hour(), now.minute(), now.second(), now.day(), now.month(), now.year());
+Serial.print(F("Date/Time: "));
+Serial.println(buf1);
+delay(1000);
+
+}
+
+
+
+EEPROM
+A0,A1,A2,GND,Wp OF eeprom to arduino gnd pin
+vcc of arduino to Vcc of eeprom
+SCL of eeprom to A5 and SDA of eeprom to A4
+
+#include <Wire.h>     
+
+#define ADDR_Ax 0b000
+#define ADDR (0b1010 << 3) + ADDR_Ax
+void setup()
+{
+
+Serial.begin(9600);
+Wire.begin();
+writeI2CByte(0, 1);
+Serial.println(readI2CByte(0));
+}
+void loop()
+{
+
+}
+void writeI2CByte(byte data_addr, byte data)
+{
+Wire.beginTransmission(ADDR);
+Wire.write(data_addr);
+Wire.write(data); 
+Wire.endTransmission();
+}
+byte readI2CByte(byte data_addr)
+{
+byte data = NULL;
+Wire.beginTransmission(ADDR); 
+Wire.write(data_addr);
+Wire.endTransmission();
+Wire.requestFrom(ADDR, 1); 
+delay(1);
+if(Wire.available())
+{
+data = Wire.read();
+}
+return data;
+}
+
+
+Size of given image
+clc;
+clear;
+close;
+im=imread('D:\es exam pics\rgbmain.png');
+[rows, columns, depth]=size(im);
+disp(rows);
+disp(columns);
+pixels=rows*columns;
+disp(pixels);
+
+Colour to gray
+clc;
+clear;
+close;
+im=imread('D:\es exam pics\rgbmain.png');
+im2=rgb2gray(im);
+level=graythresh(im);
+im3=im2bw(im,level);
+subplot(2,1,1)
+imshow(im);
+subplot(2,1,2)
+imshow(im2);
+
+
+Rotate an image
+clc;
+clear;
+close;
+im=imread('D:\es exam pics\bindhu.jpg');
+im2=rot90(im,1);
+im3=rot90(im,2);
+im4=rot90(im,3);
+rotateDegree=imrotate(im,45);
+subplot(4,1,1)
+imshow(im2);
+subplot(4,1,2)
+imshow(im3);
+subplot(4,1,3)
+imshow(im4)
+subplot(4,1,4)
+imshow(rotateDegree);
+
+Crop an image
+clc;
+clear;
+close;
+im=imread('D:\es exam pics\bindhu.jpg');
+[rows, columns, depth]=size(im);
+disp(rows);
+disp(columns);
+pixels=rows*columns;
+disp(pixels);
+im2=imcrop(im,[3555,3559,5005,5110]);
+subplot(2,2,1)
+imshow(im);
+subplot(2,2,2)
+imshow(im2);
+
+
+Threshold of image
+clc;
+close;
+close;
+im=imread('D:\es exam pics\bindhu.jpg');
+level=graythresh(im);
+disp(level);
+
+Elimination of colour
+clc;
+clear;
+close;
+im=imread('D:\es exam pics\rgbmain.png');
+subplot(4,1,1)
+imshow(im);
+
+
+im(:,:,1)=0;
+subplot(4,1,2)
+imshow(im);
+
+
+im(:,:,2)=0;
+subplot(4,1,3)
+imshow(im);
+
+im(:,:,3)=0;
+subplot(4,1,4)
+imshow(im);
