@@ -1,8 +1,10 @@
 Stepper motor
-IN1 is connected to pin8
-IN2 is connected to pin9
-IN3 is connected to pin10
-IN4 is connected to pin11
+IN1(green) is connected to pin8
+IN2(purple) is connected to pin9
+IN3(yellow) is connected to pin10
+IN4(orange) is connected to pin11
+red-vcc
+black-ground
 
 #include<Stepper.h>
 const int StepsPerRevolutions=2048;
@@ -22,8 +24,8 @@ delay(2000);
 
 
 Servo motor
-brown wire of servo to gnd of aurdino
-red wire of servo to 5v of aurdino
+brown(black) wire of servo to gnd of aurdino
+red(orange) wire of servo to 5v of aurdino
 yellow wire of servo to pin8 of aurdino
 
 #include<Servo.h>
